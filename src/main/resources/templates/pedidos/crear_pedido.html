@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Pedido</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #8e29f3;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Barra lateral para ADMIN */
+        .admin-nav {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #8e29f3;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .admin-nav a:hover {
+            background-color: #29b5f3;
+        }
+
+        .admin-profile-img, .client-profile-img, .guest-profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 2px solid #29b5f3;
+        }
+
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        /* Barra superior para CLIENTE */
+        .client-nav, .guest-nav {
+            background-color: #29b5f3;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .client-nav a, .guest-nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .client-nav a:hover, .guest-nav a:hover {
+            background-color: #8e29f3;
+        }
+
+        .login-btn {
+            background: #8e29f3;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #6a1dbb;
+        }
+
+        /* Estilos para el formulario de compra */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #8e29f3;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #c7c5c9;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #29b5f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1a8bbf;
+        }
+
+        /* Estilos para la validación */
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        input:invalid, select:invalid {
+            border-color: #ff4d4d;
+        }
+
+        input:valid, select:valid {
+            border-color: #c7c5c9;
+        }
+
+        /* Estilos para el enlace de volver */
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #8e29f3;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #29b5f3;
+        }
+    </style>
+</head>
+<body>
+<!-- NAV PARA ADMIN -->
+<nav sec:authorize="hasRole('ROLE_ADMIN')" class="admin-nav">
+    <a th:href="@{/home}">Inicio</a>
+    <a th:href="@{/usuarios/}">Usuarios</a>
+    <a th:href="@{/productos/}">Productos</a>
+    <a th:href="@{/pedidos/}">Pedidos</a>
+    <a th:href="@{/perfil/}">Mi Perfil</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</nav>
+<h1>Crear Nuevo Pedido</h1>
+
+<form id="pedidoForm" th:action="@{/pedidos/crear}" method="post" th:object="${pedido}">
+    <div>
+        <label for="nomPedido">Nombre del Pedido</label>
+        <input type="text" id="nomPedido" th:field="*{nomPedido}" placeholder="Nombre del Pedido" required maxlength="50">
+        <div class="error-message" th:if="${#fields.hasErrors('nomPedido')}" th:errors="*{nomPedido}"></div>
+    </div>
+
+    <div>
+        <label for="fechaEnvio">Fecha de Envío</label>
+        <input type="date" id="fechaEnvio" th:field="*{fechaEnvio}" required>
+        <div class="error-message" id="fechaEnvioError"></div>
+    </div>
+
+    <div>
+        <label for="fechaLlegada">Fecha de Llegada</label>
+        <input type="date" id="fechaLlegada" th:field="*{fechaLlegada}" required>
+        <div class="error-message" id="fechaLlegadaError"></div>
+    </div>
+
+    <div>
+        <label for="idMarca">Marca</label>
+        <select id="idMarca" th:field="*{idMarca}" required>
+            <option value="">Seleccione una marca</option>
+            <option th:each="m : ${marcas}" th:value="${m.idMarca}" th:text="${m.marca}"></option>
+        </select>
+        <div class="error-message" th:if="${#fields.hasErrors('idMarca')}" th:errors="*{idMarca}"></div>
+    </div>
+
+    <div>
+        <button type="submit">Crear Pedido</button>
+    </div>
+
+    <div th:if="${mensaje}">
+        <p th:text="${mensaje}"></p>
+    </div>
+</form>
+
+<a th:href="@{/pedidos/lista}">Volver a la lista de pedidos</a>
+
+<script>
+    document.getElementById('pedidoForm').addEventListener('submit', function (event) {
+        const fechaEnvio = document.getElementById('fechaEnvio').value;
+        const fechaLlegada = document.getElementById('fechaLlegada').value;
+        const fechaActual = new Date().toISOString().split('T')[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+
+        // Validar que la fecha de envío no sea menor que el día actual
+        if (fechaEnvio < fechaActual) {
+            document.getElementById('fechaEnvioError').textContent = 'La fecha de envío no puede ser menor que el día actual.';
+            event.preventDefault(); // Evitar que el formulario se envíe
+            return;
+        } else {
+            document.getElementById('fechaEnvioError').textContent = '';
+        }
+
+        // Validar que la fecha de llegada no sea menor que el día actual
+        if (fechaLlegada < fechaActual) {
+            document.getElementById('fechaLlegadaError').textContent = 'La fecha de llegada no puede ser menor que el día actual.';
+            event.preventDefault(); // Evitar que el formulario se envíe
+            return;
+        } else {
+            document.getElementById('fechaLlegadaError').textContent = '';
+        }
+
+        // Validar que la fecha de llegada no sea menor que la fecha de envío
+        if (fechaLlegada < fechaEnvio) {
+            document.getElementById('fechaLlegadaError').textContent = 'La fecha de llegada no puede ser menor que la fecha de envío.';
+            event.preventDefault(); // Evitar que el formulario se envíe
+            return;
+        } else {
+            document.getElementById('fechaLlegadaError').textContent = '';
+        }
+    });
+</script>
+</body>
+</html>

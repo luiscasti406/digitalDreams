@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Productos</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Estilos personalizados */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    h1 {
+        color: #8e29f3;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #8e29f3;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* Barra lateral para ADMIN */
+    .admin-nav {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: #8e29f3;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-nav a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    .admin-nav a:hover {
+        background-color: #29b5f3;
+    }
+
+    .admin-profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        border: 2px solid #29b5f3;
+    }
+
+    .logout-btn {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .logout-btn:hover {
+        background-color: #cc0000;
+    }
+
+    /* Barra superior para CLIENTE y NO AUTENTICADO */
+    .client-nav, .guest-nav {
+        background-color: #29b5f3;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .client-nav a, .guest-nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        padding: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .client-nav a:hover, .guest-nav a:hover {
+        background-color: #8e29f3;
+        border-radius: 5px;
+    }
+
+    .login-btn {
+        background-color: #8e29f3;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .login-btn:hover {
+        background-color: #6a1dbb;
+    }
+
+    /* Estilos para la tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #8e29f3;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    img {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 5px;
+    }
+
+    /* Estilos para los botones */
+    .btn-custom {
+        background-color: #29b5f3;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-custom:hover {
+        background-color: #1a8bbf;
+    }
+
+    .btn-secondary-custom {
+        background-color: #8e29f3;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #6a1dbb;
+    }
+
+    .btn-danger-custom {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-danger-custom:hover {
+        background-color: #cc0000;
+    }
+
+    /* Estilos para el contenedor principal */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+  </style>
+</head>
+<body>
+<!-- NAV PARA ADMIN -->
+<nav sec:authorize="hasRole('ROLE_ADMIN')" class="admin-nav">
+  <a th:href="@{/home}">Inicio</a>
+  <a th:href="@{/usuarios/}">Usuarios</a>
+  <a th:href="@{/productos/}">Productos</a>
+  <a th:href="@{/pedidos/}">Pedidos</a>
+  <a th:href="@{/perfil/}">Mi Perfil</a>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit" class="logout-btn">Logout</button>
+  </form>
+</nav>
+
+<div class="container">
+  <h1>Lista de Productos</h1>
+
+  <!-- Mensaje de error -->
+  <div th:if="${mensaje}" class="alert alert-danger">
+    <span th:text="${mensaje}"></span>
+  </div>
+
+  <!-- Botón para crear nuevo producto -->
+  <a th:href="@{/productos/crear}" class="btn btn-custom">Crear Nuevo Producto</a>
+
+  <!-- Tabla de productos -->
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Estado</th>
+      <th>Detalles</th>
+      <th>Foto</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${productos}">
+      <td th:text="${producto.idProducto}"></td>
+      <td th:text="${producto.nomProducto}"></td>
+      <td th:text="'$' + ${producto.precio}"></td>
+      <td th:text="${producto.cantidad}"></td>
+      <td th:text="${producto.estado}"></td>
+      <td th:text="${producto.detalles}"></td>
+      <td>
+        <img th:src="@{'/img/productos/' + ${producto.fotoProducto}}" width="100" height="100" />
+      </td>
+      <td>
+        <a th:href="@{/productos/modificar/{id}(id=${producto.idProducto})}" class="btn btn-secondary-custom">Modificar</a>
+        <a th:href="@{/productos/eliminar(id=${producto.idProducto})}"
+           onclick="return confirm('¿Eliminar producto?')" class="btn btn-danger-custom">Eliminar</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Botones para exportar -->
+  <div class="d-flex gap-2 mt-3">
+    <a th:href="@{/productos/exportar/excel}" class="btn btn-custom">Exportar Excel</a>
+    <a th:href="@{/productos/exportar/pdf}" class="btn btn-custom">Exportar PDF</a>
+  </div>
+
+  <!-- Formulario para importar productos desde CSV -->
+  <h2 class="mt-5">Importar Productos desde CSV</h2>
+  <form th:action="@{/productos/importar/csv}" method="post" enctype="multipart/form-data" class="mb-5">
+    <div class="mb-3">
+      <input type="file" name="file" accept=".csv" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-custom">Subir CSV</button>
+  </form>
+</div>
+
+<!-- Bootstrap JS (opcional, si necesitas funcionalidades de Bootstrap) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Madimi One", sans-serif;
+}
+
+.Logo{
+    width: 50px;
+    height: 50px;
+}
+
+ header{
+    text-align: center;
+    padding: 50px;
+ }
+
+ /**catologo**/
+
+.contairner-items{
+    padding: 50px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+ }
+
+.contairner-items img{
+    border-radius: 50px;
+    width: 480px;
+    height: 320px;
+    padding: 20px;
+}
+
+ .item{
+    border-radius: 10px;
+    border: #c42121 solid 1px;
+    padding: 18px;
+    text-align: center;
+ }
+
+ .item:hover{
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.75);
+ }
+
+ .info-product{
+    text-align: center;
+    padding: 10px;
+ }
+
+ 
+.boton{
+    background: #992525;
+    padding: 7px;
+    border-radius: 20px;
+    color: #010200;
+}
+
+.boton:hover{
+    background-color: #da3c3c;
+
+}
+
+.social-link a:hover{
+    background-color: rgb(133, 21, 6);
+}
+
+@media(max-width:991px){
+    .menu{
+        padding: 30px;
+    }
+    .menu label{
+        display: initial;
+    }
+
+    .header{
+        min-height: 0vh;
+
+    }
+
+    .header-content{
+        padding: 100px 30px;
+
+    }
+
+    .header-content p{
+        padding: 0;
+    }
+
+    .coffee{
+        padding: 30px;
+    }
+    .coffee-content h2{
+        padding: 0;
+
+    }
+
+    .txt-p{
+        padding: 0;
+    }
+
+    .coffee-group{
+        flex-direction: column;
+        margin-bottom: 0;
+    }
+
+    .coffee-img{
+        display: none;
+    }
+
+    .servicios{
+        padding: 30px;
+    }
+
+    .servicios-content p{
+        padding: 0;
+
+    }
+
+    .services-group{
+        flex-direction: column;
+        margin-bottom: 0;
+    }
+    .services-1{
+        margin-bottom: 25px;
+    }
+
+    .general{
+        flex-direction: column;
+    }
+
+    .general-1{
+        width: 100%;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .general-2, .general-3{
+        display: none;
+    }
+}

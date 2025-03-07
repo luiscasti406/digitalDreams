@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pedidos</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #8e29f3;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+        }
+
+        /* Barra lateral para ADMIN */
+        .admin-nav {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #8e29f3;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .admin-nav a:hover {
+            background-color: #29b5f3;
+        }
+
+        .admin-profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 2px solid #29b5f3;
+        }
+
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        /* Barra superior para CLIENTE y NO AUTENTICADO */
+        .client-nav, .guest-nav {
+            background-color: #29b5f3;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .client-nav a, .guest-nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .client-nav a:hover, .guest-nav a:hover {
+            background-color: #8e29f3;
+            border-radius: 5px;
+        }
+
+        .login-btn {
+            background-color: #8e29f3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #6a1dbb;
+        }
+
+        /* Estilos para la tabla */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #8e29f3;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Estilos para los botones de acción */
+        .acciones a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #29b5f3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .acciones a:hover {
+            background-color: #1a8bbf;
+        }
+
+        /* Estilos para el enlace de crear nuevo pedido */
+        .crear-pedido {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #8e29f3;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .crear-pedido:hover {
+            background-color: #6a1dbb;
+        }
+
+        /* Estilos para el contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<!-- NAV PARA ADMIN -->
+<nav sec:authorize="hasRole('ROLE_ADMIN')" class="admin-nav">
+    <a th:href="@{/home}">Inicio</a>
+    <a th:href="@{/usuarios/}">Usuarios</a>
+    <a th:href="@{/productos/}">Productos</a>
+    <a th:href="@{/pedidos/}">Pedidos</a>
+    <a th:href="@{/perfil/}">Mi Perfil</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</nav>
+<div class="container">
+    <h1>Lista de Pedidos</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID Pedido</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pedido : ${pedidos}">
+            <td th:text="${pedido.idPedido}"></td>
+            <td th:text="${pedido.nomPedido}"></td>
+            <td th:text="${pedido.marca.marca}"></td>
+            <td th:text="${pedido.fechaEnvio}"></td>
+            <td th:text="${pedido.fechaLlegada}"></td>
+            <td class="acciones">
+                <a th:href="@{/pedidos/{id}(id=${pedido.idPedido})}">Ver</a>
+                <a th:href="@{/pedidos/modificar/{id}(id=${pedido.idPedido})}">Modificar</a>
+                <a th:href="@{/pedidos/cancelar/{id}(id=${pedido.idPedido})}">Cancelar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/pedidos/crear}" class="crear-pedido">Crear Nuevo Pedido</a>
+</div>
+</body>
+</html>

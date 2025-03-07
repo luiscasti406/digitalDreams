@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Modificar Usuario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Estilos personalizados */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    h2 {
+      color: #8e29f3;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #8e29f3;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #c7c5c9;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+      background-color: #29b5f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #1a8bbf;
+    }
+
+    .btn-volver {
+      display: inline-block;
+      background-color: #8e29f3;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-volver:hover {
+      background-color: #6a1dbb;
+    }
+
+    .user-image {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .user-image img {
+      border: 2px solid #29b5f3;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Modificar Usuario</h2>
+  <form th:action="@{/usuarios/modificar/{id}(id=${usuario.idUsuario})}" method="post" enctype="multipart/form-data">
+    <label for="prim_nombre">Primer Nombre:</label>
+    <input type="text" id="prim_nombre" name="prim_nombre" th:value="${usuario.prim_nombre}" required>
+
+    <label for="seg_nombre">Segundo Nombre:</label>
+    <input type="text" id="seg_nombre" name="seg_nombre" th:value="${usuario.seg_nombre}">
+
+    <label for="prim_apellido">Primer Apellido:</label>
+    <input type="text" id="prim_apellido" name="prim_apellido" th:value="${usuario.prim_apellido}" required>
+
+    <label for="seg_apellido">Segundo Apellido:</label>
+    <input type="text" id="seg_apellido" name="seg_apellido" th:value="${usuario.seg_apellido}">
+
+    <label for="email">Correo Electrónico:</label>
+    <input type="email" id="email" name="email" th:value="${usuario.email}" required>
+
+    <label for="password">Nueva Contraseña (opcional):</label>
+    <input type="password" id="password" name="password">
+
+    <label for="id_rol">Rol:</label>
+    <select id="id_rol" name="id_rol" required>
+      <option value="1" th:selected="${usuario.rol.idRol == 1}">Administrador</option>
+      <option value="2" th:selected="${usuario.rol.idRol == 2}">Cliente</option>
+    </select>
+
+    <label for="foto_usuario">Foto de Perfil:</label>
+    <input type="file" id="foto_usuario" name="foto_usuario" accept="image/png, image/jpeg">
+
+    <div th:if="${usuario.fotoUsuario}">
+      <p>Imagen actual:</p>
+      <div class="user-image">
+        <img th:src="@{'/img/usuarios/' + ${usuario.fotoUsuario}}" alt="Foto de usuario">
+      </div>
+    </div>
+
+    <button type="submit">Guardar Cambios</button>
+  </form>
+  <br>
+  <a th:href="@{/usuarios/listar}" class="btn-volver">Volver a la lista</a>
+</div>
+
+</body>
+</html>
